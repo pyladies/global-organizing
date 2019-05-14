@@ -5,7 +5,7 @@ Repository to track global organizing
 
 Monthly meetings are held the first Wednesday of the month at 7:00pm EDT.  
 
-To attend, add the event to your [calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=MnJscW1vOTlrb2l2NnVzdnBtZmhoZDE4cHJfMjAxOTA2MDVUMjMwMDAwWiBsb3JlbmEubi5tZXNhQG0&tmsrc=lorena.n.mesa%40gmail.com&scp=ALL).
+To attend, add the [event to your calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=MWo5ZjU2bzFvNmVlMmZrY3Ftc3MzY2FpazlfMjAxOTA2MDVUMTcwMDAwWiBweWZvdW5kLm9yZ19wOTc0Mms2cGswZmNqZDY1b2xwamJjYXY2Y0Bn&tmsrc=pyfound.org_p9742k6pk0fcjd65olpjbcav6c%40group.calendar.google.com&scp=ALL).
 
 _Monthly Agenda_
 
@@ -17,5 +17,5 @@ Monthly meeting notes are captured in the `/notes` directory.
 
 ## Resources
 
-- [PyLadies Global Calendar](https://calendar.google.com/calendar/embed?src=33mjc00d08aejualecuvosr358%40group.calendar.google.com&ctz=America%2FChicago)
+- [PyLadies Global Calendar](https://calendar.google.com/calendar?cid=cHlmb3VuZC5vcmdfcDk3NDJrNnBrMGZjamQ2NW9scGpiY2F2NmNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 - [PyLadies Global Project Board](https://github.com/orgs/pyladies/projects/1)
