@@ -1,8 +1,8 @@
 ---
 name: Monthly Meeting
 about: This template should be used to create the meeting notes for each month's meeting
-title: Monthly PyLadies Meeting Notes: <date>
-labels:
+title: 'Monthly PyLadies Meeting Notes: <date>'
+labels: monthly meeting
 assignees: lorenanicole
 
 ---
