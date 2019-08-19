@@ -3,7 +3,7 @@ Repository to track global organizing
 
 ## Monthly Meeting
 
-Monthly meetings are held the first Wednesday of the month at 1:00pm EDT.  
+Monthly meetings are held the second Wednesday of the month at 1:00pm EDT.  
 
 To attend, add the [event to your calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=MWo5ZjU2bzFvNmVlMmZrY3Ftc3MzY2FpazlfMjAxOTA2MDVUMTcwMDAwWiBweWZvdW5kLm9yZ19wOTc0Mms2cGswZmNqZDY1b2xwamJjYXY2Y0Bn&tmsrc=pyfound.org_p9742k6pk0fcjd65olpjbcav6c%40group.calendar.google.com&scp=ALL).
 
