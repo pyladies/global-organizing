@@ -21,6 +21,10 @@ Monthly meeting notes are captured in the `/notes` directory.
 Write ups of our global organizing process and workflow are in the `/process` directory.
 Example: the new PyLadies chapter onboarding workflow.
 
+## Scripts
+
+Any scripts needed to help in managing the global team are found in `/scripts` directory.
+
 ## Resources
 
 - [PyLadies Global Calendar](https://calendar.google.com/calendar?cid=cHlmb3VuZC5vcmdfcDk3NDJrNnBrMGZjamQ2NW9scGpiY2F2NmNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
