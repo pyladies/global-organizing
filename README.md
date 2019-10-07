@@ -1,5 +1,6 @@
 # global-organizing
-Repository to track global organizing 
+
+Repository to track global organizing as well as to suggest new project teams.
 
 ## Monthly Meeting
 
@@ -11,17 +12,22 @@ _Monthly Agenda_
 
 Each month an issue will be opened, using the monthly meeting issue template. We'll use this template to track discussion items, assign priorities, and add to our project board.
 
-## Notes
+## Project Proposals
+
+If you are seeking to create a new PyLadies Global project team, please use [this template](.github/ISSUE_TEMPLATE/project-proposal.md). 
+
+## Repository Overview
+
+### Notes
 
 Monthly meeting notes are captured in the `/notes` directory. 
 
-
-## Process/workflow
+### Process/workflow
 
 Write ups of our global organizing process and workflow are in the `/process` directory.
 Example: the new PyLadies chapter onboarding workflow.
 
-## Scripts
+### Scripts
 
 Any scripts needed to help in managing the global team are found in `/scripts` directory.
 
