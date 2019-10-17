@@ -1,2 +1,4 @@
+.DS_Store
 .idea
-.csv
+*.csv
+.ipynb_checkpoints
