@@ -18,8 +18,8 @@ Please document the following for your project proposal.
 If no, please explain which project this would replace or update (for example, merging two project teams).
 -->
 
-[ ] Yes
-[ ] No
+- [ ] Yes
+- [ ] No
 
 
 ## What is the name and focus area of this project?
@@ -31,6 +31,14 @@ Provide a 2 - 3 sentence explanation of the project focus area.
 <!-- 
 Tag as many project lead(s) as you see fit, keep in mind that consent should be acquired from the proposed project lead(s) and be self-identifying PyLadies members. 
 -->
+
+## Who will be the team member(s)?
+<!-- 
+Tag any members that have expressed interested, or update list with any names based on feedback on the pull request.
+-->
+
+Name | GitHub Handle | PyLadies Chapter | Team Role |
+| --| --| --| --|
 
 ## What are the initial unit(s) of work the project will target?
 <!-- 
