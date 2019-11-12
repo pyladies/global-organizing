@@ -5,6 +5,7 @@
 script to generate PyLadies twitter .csv with the following information:
 - twitter screen name
 - description
+- location
 - expanded tweet profile url
 - date of last tweet
 
@@ -165,7 +166,7 @@ if __name__ == "__main__":
     # Write list to csv
     print('Writing...')
     with open('pyladies_twitter_handles.csv', mode='w') as csv_file:
-        fieldnames = ['screen_name', 'description', 'url', 'last_tweeted']
+        fieldnames = ['screen_name', 'description', 'location', 'url', 'last_tweeted']
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
 
@@ -188,6 +189,7 @@ if __name__ == "__main__":
             )
 
             desciption = twitter_user[0].get('description')
+            location = twitter_user[0].get('location')
 
             if twitter_user[0].get('entities') and twitter_user[0].get('entities').get('url'):
                 url = twitter_user[0].get('entities').get('url').get('urls')[0].get('expanded_url')
@@ -205,6 +207,7 @@ if __name__ == "__main__":
                 {
                     'screen_name': twitter_handle,
                     'description': desciption,
+                    'location': location,
                     'url': url,
                     'last_tweeted': last_tweet_timestamp
                 }
