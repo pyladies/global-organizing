@@ -2,3 +2,4 @@
 .idea
 *.csv
 .ipynb_checkpoints
+*.yml
