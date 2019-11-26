@@ -3,3 +3,4 @@
 *.csv
 .ipynb_checkpoints
 *.yml
+*.json
