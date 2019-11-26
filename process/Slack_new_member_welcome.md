@@ -1,4 +1,4 @@
-<H1><img align="left" height=100 src="images/Girlgeek_w_workmark.png">  Hello!</H1>
+<H1><img src="/images/Girlgeek_w_workmark.png">  Hello!</H1>
 
 
 &nbsp;  
