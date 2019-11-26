@@ -20,7 +20,7 @@ Create a project in the [Google API Console](https://console.developers.google.c
 - Enable Google Drive API
 - Via the project dash click ["Create Credentials"](https://console.developers.google.com/apis/api/sheets.googleapis.com/overview?project=pyladies-admin) 
   to create a Service Account with at least Editor permissions for your project, download the credentials as `.json`
-- On the PyLadies Chapter Directory sheet, invite the `client_email` from the downloaded credentials via `Share -> Share with others -> Send': ![Share File](share_file.png)
+- On the PyLadies Chapter Directory sheet, invite the `client_email` from the downloaded credentials via `Share -> Share with others -> Send`: ![Share File](share_file.png)
 
  ### To Send Emails with Gmail
  
