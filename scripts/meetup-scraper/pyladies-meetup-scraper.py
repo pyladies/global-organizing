@@ -60,10 +60,10 @@ def ratelimit(number_times):
             number_times = response.headers.get('X-RateLimit-Remaining')
             if not completed and response.status_code == 429:
                 seconds_until_reset = int(
-                    meetup_resp.headers.get('X-RateLimit-Reset')
+                    response.headers.get('X-RateLimit-Reset')
                 )
 
-                meetup_errors = meetup_resp.json().get('errors')
+                meetup_errors = response.json().get('errors')
                 meetup_errors = [e.get('code') for e in meetup_errors]
 
                 if seconds_until_reset and 'throttled' in meetup_errors:
@@ -233,11 +233,12 @@ if __name__ == "__main__":
             continue
 
         meetup_resp = meetup_resp.json()
-
-        if chapter.get('meetup_id') != meetup_resp.get('id'):
+        meetup_id = int(chapter.get('meetup_id', 0))
+        new_meetup_id = id(meetup_resp.get('id', 0))
+        if meetup_id != new_meetup_id:
             print(f'MeetUp Chapter {chapter.get("name")} '
                   f'id is wrong {meetup_resp.get("id")}')
-            chapter['meetup_id'] = int(meetup_resp.get('id'))
+            chapter['meetup_id'] = new_meetup_id
 
         if meetup_resp.get('organizer'):
             chapter['organizer'] = meetup_resp.get('organizer').get('name')
@@ -254,7 +255,7 @@ if __name__ == "__main__":
         if meetup_resp.get('pro_network'):
             chapter['pro_network'] = meetup_resp.get('pro_network').get('name')
 
-    with open(chapter_file, 'w+') as stream:  # Overwrites original file
+    with open(chapter_file, 'w') as stream:     # Overwrites original file
         chapter_data = yaml.dump(chapter_data, stream)
 
     print('Done!')
