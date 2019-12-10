@@ -14,7 +14,7 @@ Each month an issue will be opened, using the monthly meeting issue template. We
 
 ## Project Proposals
 
-If you are seeking to create a new PyLadies Global project team, please use [this template](.github/ISSUE_TEMPLATE/project-proposal.md). 
+Have an idea for a new PyLadies Project team? Please refer to the [PyLadies Projects Overview](process/pyladies-projects-overview.md) for more information.
 
 ## Repository Overview
 
