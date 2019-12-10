@@ -3,7 +3,6 @@ name: Project Proposal
 about: This template should be used to create a new PyLadies Global project.
 title: 'PyLadies Project Proposal: <Name of Project>'
 labels: project proposals
-assignees: lorenanicole
 
 ---
 
