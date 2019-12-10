@@ -17,7 +17,7 @@ Additional requirements to consider:
 
 1. Open up a new issue outlining the scope of the project, project team members information, and other requested details with [this template](.github/ISSUE_TEMPLATE/project-proposal.md). 
 2. Solicit feedback and members in the [PyLadies Slack](https://slackin.pyladies.com/) using the channels #general and #project-proposals.
-3. Get approval from the [PyLadies Global Admin Team](https://github.com/orgs/pyladies/teams/pyladies-global-admin).
+3. Get approval from the PyLadies Global Admin Team (the issue template automatically tags `cc/@pyladies/pyladies-global-admin`).
 
 ## Existing Project Teams
 

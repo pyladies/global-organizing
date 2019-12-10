@@ -55,7 +55,7 @@ Answer the following:
 ## Is there anything else relevant to the scope of this project?
 
 
-cc/ @pyladies/core
+cc/ @pyladies/pyladies-global-admin
 <!--
 Add any other team or individuals you think should be subscribed to this issue
 
