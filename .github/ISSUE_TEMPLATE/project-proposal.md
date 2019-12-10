@@ -3,7 +3,6 @@ name: Project Proposal
 about: This template should be used to create a new PyLadies Global project.
 title: 'PyLadies Project Proposal: <Name of Project>'
 labels: project proposals
-assignees: lorenanicole
 
 ---
 
@@ -55,7 +54,7 @@ Answer the following:
 ## Is there anything else relevant to the scope of this project?
 
 
-cc/ @pyladies/core
+cc/ @pyladies/pyladies-global-admin
 <!--
 Add any other team or individuals you think should be subscribed to this issue
 
