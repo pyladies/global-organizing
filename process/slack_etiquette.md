@@ -9,9 +9,9 @@ ______________________________________
 
 ## :star2: Guidelines to help you get the most from our Slack community.:star2: 
 
-##### As a fiscal sponsoree of the Python Software Foundation, all **PyLadies** spaces (online & physical) are governed by the **`PSF Code of Conduct`**.
+All **PyLadies** spaces (online & physical) are governed by the **`PyLadies Code of Conduct`**.
 
-#####  You can read the Code of Conduct [here](https://www.python.org/psf/conduct/).
+You can read the Code of Conduct [here](https://www.pyladies.com/CodeOfConduct/).
 
 
 
@@ -27,7 +27,7 @@ Additionally, the admins, moderators, & everyone else in PyLadies are **donating
 
 We have members all around the world, and many of us are working professionals. As you are participating in conversations or seeking assistance, it’s entirely possible that you won’t get a response for an hour or day or more. 
 
-With that in mind, use  `@here`, `@channel`, or `@everyone` _sparingly_, if at all.  It’s very tempting to try to get more attention on your topic -- but remember that nobody is going to appreciate  lots of push notifications at 3am.
+With that in mind, use  `@here`, `@channel`, or `@everyone` _sparingly_, if at all (_these three slack commands send push notifications to all members in a channel or group **regardless of what time it is**_).  It’s very tempting to try to get more attention on your topic -- but remember that nobody is going to appreciate  lots of push notifications at 3am.
 
 Be mindful when cross posting the same content in multiple channels. People in this community may not be super-chatty at any given moment, but we **are** reading posts across all channels.  Please also try to reduce channel "noise" by threading longer or more involved conversations, so that participants can more easily join your conversation & follow the prior comments.
 
