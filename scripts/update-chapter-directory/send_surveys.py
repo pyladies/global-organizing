@@ -249,7 +249,7 @@ if __name__ == "__main__":
     )
     gsheets_api.get_client()
 
-    updated_list = update_pyladies_list(gsheets_api, directory_name)
+    updated_list = update_pyladies_list(gsheets_api, directory_name, last_download_sheet, tracker_sheet)
     if updated_list:
         print(f'Updated PyLadies List with {last_download_sheet}.')
 
@@ -257,4 +257,4 @@ if __name__ == "__main__":
         gsheets_api, directory_name, tracker_sheet, chapter_directory_sheet
     )
     emails_to_send = create_prefilled_surveys(users_to_email)
-    send_emails(emails_to_send, GMAIL_ACCOUNT_NAME, GMAIL_ACCOUNT_PASSWORD, gsheets_api, email_sheet)
+    # send_emails(emails_to_send, GMAIL_ACCOUNT_NAME, GMAIL_ACCOUNT_PASSWORD)
