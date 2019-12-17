@@ -2,7 +2,7 @@
 
 We have worked to translate this proposal into the following languages listed below. If you would like translation in another language please email `info@pyladies.com` or comment on this issue.
 
-- [Arabic - In Progress](https://docs.google.com/document/d/1XySeUgFTuV6DpIeimUOGSWs8iUDjILPGxKdUAAw6Vok/edit?usp=sharing)
+- [Arabic - Done](https://docs.google.com/document/d/1XySeUgFTuV6DpIeimUOGSWs8iUDjILPGxKdUAAw6Vok/edit?usp=sharing)
 - [Chinese - Still needs to be translated](https://docs.google.com/document/d/1xSNWxAuCj-Ei2xjvqC5yMa-_8zxrAiDBgM0KYuI8cdU/edit?usp=sharing)
 - [French - Done](https://docs.google.com/document/d/1GB9x7gnPmyLvUCY1fCbNkWeoABd-VFLCZGt2oe0EjDY/edit?usp=sharing) 
 - [Portuguese - Done](http://bit.ly/conselho_global_pyladies_ptbr)
