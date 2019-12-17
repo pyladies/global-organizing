@@ -24,8 +24,9 @@ Monthly meeting notes are captured in the `/notes` directory.
 
 ### Process/workflow
 
-Write ups of our global organizing process and workflow are in the `/process` directory.
-Example: the new PyLadies chapter onboarding workflow.
+Write ups of our global organizing process and workflow are in the `/process` directory. 
+
+Example: PyLadies chapter onboarding workflow, PyLadies Global Council Selection Proposals.
 
 ### Scripts
 
