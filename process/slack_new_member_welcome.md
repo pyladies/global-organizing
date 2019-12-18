@@ -3,7 +3,7 @@
 
 &nbsp;  
 
-You're welcome to the Slack Platform of theGlobal PyLadies Community. 
+Welcome to the Global PyLadies Community Slack Platform. 
 
 Kindly do well to introduce yourself in #introductions with the following information:
 
@@ -16,7 +16,7 @@ Kindly do well to introduce yourself in #introductions with the following inform
 
 
 
-While you can make posts anywhere on this platform, you are cautioned to put them in the right channel. We have many available channels, such as those listed below. However,  it may help you engage more effectively by finding the _appropriate_ channel to participate in! 
+While you can make posts anywhere on this platform, we encourage you to look for a related channel. We have many available channels, such as those listed below. It may help you engage more effectively by finding the _appropriate_ channel to participate in! 
 
 Some great places to start: 
 
@@ -28,14 +28,13 @@ Some great places to start:
 
 \#pyladies-support
 
-\#africa
-
 \#help-me
 
 
+Check if your city or region has a channel by searching for your city name or your regional name in the Slack Channels! For example: `#africa` and `#nyc`
 
 
-If you are a PyLadies Organizer kindly do well to ask to be added to the private **organizer's** channel.
+If you are a PyLadies Organizer, ask to be added to the private **organizers** channel.
 
 PyLadies aims to provide a friendly support network for our self-identifying members & help build a bridge to the larger Python world.
 
