@@ -1,4 +1,4 @@
-# PyLadiea Global Organizing
+# PyLadies Global Organizing
 
 Repository to track global organizing as well as to suggest new project teams.
 
@@ -31,6 +31,8 @@ Example: PyLadies chapter onboarding workflow, PyLadies Global Council Selection
 ### Scripts
 
 Any scripts needed to help in managing the global team are found in `/scripts` directory.
+
+Example: Script to update PyLadies MeetUp info, Script to find PyLadies Twitter handles.
 
 ## Resources
 
