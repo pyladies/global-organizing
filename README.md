@@ -4,9 +4,9 @@ Repository to track global organizing as well as to suggest new project teams.
 
 ## Monthly Meeting
 
-Monthly meetings are held the second Wednesday of the month at 1:00pm EDT.  
+The Global team meets every second Wednesday of the month. To make the meeting time more globally inclusive the meeting changes between two times. For every even months (Febuary, April, etc) the meeting is at 18:00 CT. Every odd month (January, March, etc.) the meeting is at 12:00 PM CT.
 
-To attend, add the [event to your calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=MWo5ZjU2bzFvNmVlMmZrY3Ftc3MzY2FpazlfMjAxOTA2MDVUMTcwMDAwWiBweWZvdW5kLm9yZ19wOTc0Mms2cGswZmNqZDY1b2xwamJjYXY2Y0Bn&tmsrc=pyfound.org_p9742k6pk0fcjd65olpjbcav6c%40group.calendar.google.com&scp=ALL).
+To attend, in the [PyLadies Slack](https://slackin.pyladies.com/) please `@admin` with your request to join and a PyLadies Slack admin can help.
 
 _Monthly Agenda_
 
