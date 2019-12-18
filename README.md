@@ -1,4 +1,4 @@
-# global-organizing
+# PyLadiea Global Organizing
 
 Repository to track global organizing as well as to suggest new project teams.
 
@@ -20,13 +20,13 @@ Have an idea for a new PyLadies Project team? Please refer to the [PyLadies Proj
 
 ### Notes
 
-Monthly meeting notes are captured in the `/notes` directory. 
+Monthly meeting notes are captured in the `/notes` directory. All notes are additionally published in the [PyLadies Slack](https://slackin.pyladies.com/) at `#feed-global-minutes`.
 
 ### Process/workflow
 
 Write ups of our global organizing process and workflow are in the `/process` directory. 
 
-Example: PyLadies chapter onboarding workflow, PyLadies Global Council Selection Proposals.
+Example: PyLadies chapter onboarding workflow, PyLadies Global Council Selection Proposals, PyLadies Slack introduction prompt.
 
 ### Scripts
 
