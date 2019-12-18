@@ -42,16 +42,16 @@ Conversely, if a channel is particularly quiet, please do not post "this channel
 
 ### :star2: Don’t “ask to ask”
 Newcomers very commonly ask about asking a question in one of a few ways:
-.
+
+<br>
+
 _**“Does anyone know about [X tool or library]?”**_
-The answer is probably **“yes,”** but nobody can help you until you state what your problem **is**. All too often by the time somebody asks what the **real** question is, the person who needed help has disconnected. 
-.
-_**Please be specific with your questions so all of us can help you even when you aren't online.**_ Share a code snippet, a link to where you're seeing the issue, a description of what is confusing you, and specifics on what you've tried so far.  More often than not, it also helps to paste your error logs into a snippet or text file  to accompany your question/issue.
-.
+The answer is probably **“yes,”** but nobody can help you until you state what your problem **is**. All too often by the time somebody asks what the **real** question is, the person who needed help has disconnected. _**Please be specific with your questions so all of us can help you even when you aren't online.**_ Share a code snippet, a link to where you're seeing the issue, a description of what is confusing you, and specifics on what you've tried so far.  More often than not, it also helps to paste your error logs into a snippet or text file  to accompany your question/issue.  
+
+<br>
+
 _**“Is it okay if I ask about [X tool or library] here?”**_
-We have a dizzying array of channels, which we’re aware of and for which we apologize. All our channels are listed alphabetically. 
-.
-Browse the `Channels` list for any that seem like obvious places to ask your question. If you don’t see any topics or Channels that fit, don’t hesitate to post it in #general.  If there’s a better place for it, one of the moderators or other helpful members will suggest that, but don't worry - off topic messages aren’t going to get you banned.
+We have a dizzying array of channels, which we’re aware of and for which we apologize. All our channels are listed alphabetically. Browse the `Channels` list for any that seem like obvious places to ask your question. If you don’t see any topics or Channels that fit, don’t hesitate to post it in #general.  If there’s a better place for it, one of the moderators or other helpful members will suggest that, but don't worry - off topic messages aren’t going to get you banned.
 
 
 
