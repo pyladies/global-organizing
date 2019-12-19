@@ -11,13 +11,36 @@ Membership as a PyLadies member, therefore, will rely on self-identification.
 Additional requirements to consider:
 
 - Basic communication in English or ability to alternatively contribute to the project team through English (e.g. a local volunteer can help include updates in English representing volunteers from a geographic region). Please note that the language(s) a Project team can support depend on the members of the team, if additional languages are needed please note in your proposal (see below) or contact that project team directly.
+
 - Reasonably responsive on email, GitHub, and Slack
+
+  
 
 ## To start a project
 
 1. Open up a new issue outlining the scope of the project, project team members information, and other requested details with [this template](.github/ISSUE_TEMPLATE/project-proposal.md). 
+
 2. Solicit feedback and members in the [PyLadies Slack](https://slackin.pyladies.com/) using the channels #general and #project-proposals.
+
 3. Get approval from the PyLadies Global Admin Team (the issue template automatically tags `cc/@pyladies/pyladies-global-admin`).
+
+   
+
+## So a project's been started - _now what?_
+
+We recommend making a few up front "administrative" decisions around membership, communication, & contributions.  Documenting how the project team  will be "run"  helps volunteers understand where & how they can best contribute.  These agreements can be added to the team project issue, the project repo README.md, or any other place that's accessible to all team members:
+
+
+
+*  How will members ask/apply to join your project team?  Are there expectations and/or qualifications you'd like to articulate?
+*  What will be the process for onboarding new project members?
+*  How will the group communicate with one another?  How will members stay informed & coordinated?
+*  What will be the workflow for contributions coming into the group?  What will be the review process for issues & suggestions?
+* How will the issues / units of work / project areas be managed?  How will you track progress & challenges?
+
+Any of the global-organizing admins or existing project leads can also help you with tools & processes that have worked for them, or with any repo ,project board, or wiki setup needed for your team.  Just reach out on Slack, or open an issue in this repository.
+
+
 
 ## Existing Project Teams
 
@@ -25,6 +48,7 @@ Additional requirements to consider:
 Creating new chapter and password reset require PyLadies Admin account in GSuite. However, other activities like reviewing chapter requests and other email communication do not require an admin account. As such, Project lead(s) should be one of the PyLadies Admin account, however team members can be any self-identifying PyLadies member. 
 
 ### [Communication](https://github.com/pyladies/project-communications)
+
 A team to handle the Global PyLadies Communication and Engagement work. Work includes managing comms as it relates to interchapter communication and managing digital assets (e.g. blog, Slack). As such, Project lead(s) should include at least one seasoned PyLadies Chapter organizer, however team members can be any self-identifying PyLadies member.
 
 ## Proposed Project Teams
