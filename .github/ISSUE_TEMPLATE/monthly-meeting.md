@@ -49,3 +49,6 @@ Action Item| Owner | Relevant links | Completed
 
 Action Item| Owner | Relevant links | 
 | --| --| --|
+
+@pyladies/pyladies-global-contributors 
+@pyladies/pyladies-global-admin 
