@@ -26,6 +26,11 @@ _Please add items as needed. If you add a topic please make sure to attend the m
 
 3. Project Tech & Infra (Slack: #project-tech-infra / Repo: https://github.com/pyladies/pyladies )
 
+### Review Actions Items from Last Meeting
+
+Action Item| Owner | Relevant links | Completed
+| --| --| --| --|
+
 ### New Business
 
 - [ ]
