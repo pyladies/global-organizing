@@ -9,16 +9,24 @@ assignees: lorenanicole, mariatta, bethanyg
 
 _This template should be used (edited) the month prior and during the meeting. This will ensure we can address all topics added throughout the month; as well as provide minutes and follow up after the meeting is held._
 
-**Initial Details**
+# PyLadies Global Meeting
 
+- Date: <! –– insert date ––>  
 - Previous meeting issue link:
 - Current meeting attendees:
 
-**Meeting Topics**
+## Agenda
 
 _Please add items as needed. If you add a topic please make sure to attend the meeting._
 
-_New Business_
+### Project Updates
+1. Project Comms (Slack: #project-communication / Repo: https://github.com/pyladies/project-communications)
+
+2. Project Admin & Logistics (Slack: #project-admin-logistics / Repo: https://github.com/pyladies/project-admin-logisitics )
+
+3. Project Tech & Infra (Slack: #project-tech-infra / Repo: https://github.com/pyladies/pyladies )
+
+### New Business
 
 - [ ]
 - [ ]
@@ -26,13 +34,13 @@ _New Business_
 - [ ]
 - [ ]
 
-_Old Business: Follow up items from prior meeting:_
+### Old Business: Follow up items from prior meeting:
   - [ ]
   - [ ]
   - [ ]
   - [ ]
 
-**Action Items and Assignees for Next Meeting**
+### Action Items and Assignees for Next Meeting
 
 Action Item| Owner | Relevant links | 
 | --| --| --|
