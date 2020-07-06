@@ -257,13 +257,13 @@ def send_emails(emails, gmail_user, gmail_password, directory_name, email_sheet_
         message.attach(msg)
 
         try:
-            server.sendmail(from_addr=gmail_user, to_addrs=email_address, msg=message.as_string())
+            server.sendmail(from_addr=gmail_user, to_addrs="lorena@pyladies.com", msg=message.as_string())
             print(f'Sent message successfully: {email_address}')
-            email_cells.append(
-                Cell(row=indx + 2,  # Row aren't 0 based, Row 1 is the header
-                     col=3,  # Col aren't 0 based like an index :-)
-                     value='YES')
-            )
+            # email_cells.append(
+            #     Cell(row=indx + 2,  # Row aren't 0 based, Row 1 is the header
+            #          col=3,  # Col aren't 0 based like an index :-)
+            #          value='YES')
+            # )
         except Exception as e:
             print(f'An error occurred while trying to send email for {email_address}: {e}')
 

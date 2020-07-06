@@ -233,7 +233,12 @@ if __name__ == "__main__":
             continue
 
         meetup_resp = meetup_resp.json()
-        meetup_id = int(chapter.get('meetup_id', 0))
+
+        if isinstance(chapter.get('meetup_id'), int):
+            meetup_id = int(chapter.get('meetup_id', 0))
+        else:
+            meetup_id = 0
+
         new_meetup_id = id(meetup_resp.get('id', 0))
         if meetup_id != new_meetup_id:
             print(f'MeetUp Chapter {chapter.get("name")} '
