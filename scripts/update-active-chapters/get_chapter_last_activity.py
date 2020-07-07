@@ -1,3 +1,5 @@
+from dateutil.relativedelta import relativedelta
+
 __author__ = "Lorena Mesa"
 __email__ = "lorena@pyladies.com"
 
@@ -16,7 +18,7 @@ import yaml
 from dotenv import load_dotenv
 from geopy import OpenCage
 import gspread
-from gspread import SpreadsheetNotFound, Cell
+from gspread import SpreadsheetNotFound
 from oauth2client.service_account import ServiceAccountCredentials
 
 dotenv_path = join(dirname(__file__), '.env')
@@ -40,6 +42,8 @@ MAX_MEETUP_REQUESTS_PER_HOUR = 200
 
 # Datetime for csv
 TODAY_DATE = datetime.datetime.now().strftime('%Y_%m_%d')
+TODAY = datetime.datetime.now()
+ONE_YEAR_AGO = datetime.timedelta(days=365)
 
 def ratelimit(number_times):
     def decorator(fn):
@@ -312,6 +316,7 @@ if __name__ == "__main__":
             if record.get('What country is your chapter located in?') else '',
             'name': record.get('What is your chapter name?')
             if record.get('What is your chapter name?') else '',
+            'registered_in_directory': 'yes'
         },
         chapter_sheets_data
     ))
@@ -375,7 +380,7 @@ if __name__ == "__main__":
 
     headers = ['email', 'last_sign_in', 'name', 'event_page', 'directory_website', 'language', 'organizers',
                'city', 'country', 'website', 'meetup', 'twitter', 'latitude', 'longitude', 'image', 'continent',
-               'last_event_date', 'last_event_link']
+               'last_event_date', 'last_event_link', 'registered_in_directory','active']
     with open(f'merged_chapter_data_{TODAY_DATE}.csv', 'w') as csvfile:
 
         writer = csv.DictWriter(csvfile, fieldnames=headers)
@@ -388,7 +393,7 @@ if __name__ == "__main__":
             chapter['last_event_date'], chapter['last_event_link'] = '', ''
             if meetup_name:
                 print(f'Retrieving chapter {meetup_name} info')
-                completed, meetup_resp = meetup_api.get_group(meetup_name)
+                _, meetup_resp = meetup_api.get_group(meetup_name)
 
                 if meetup_resp.status_code == 404:
                     print(f'Chapter {meetup_name} has no meetup, deleting info')
@@ -417,6 +422,22 @@ if __name__ == "__main__":
                 location_info = geolocator.get_location_information(chapter.get('latitude'), chapter.get('longitude'))
                 chapter['country'] = location_info.get('country')
                 chapter['continent'] = location_info.get('continent')
+
+            last_sign_in = chapter.get('last_sign_in')
+            last_login = None
+            if last_sign_in != 'never logged in':
+                try:
+                    last_login = datetime.datetime.strptime(last_sign_in, '%Y/%m/%d %H:%M:%S')
+                except Exception as e:
+                    print('Could not parse datetime str')
+
+            # Determine if active using email activity 
+            if (chapter.get('last_sign_in').lower() == 'never logged in' and chapter.get('registered_in_directory', 'no') == 'no'):
+                chapter['active'] = False
+            elif TODAY - ONE_YEAR_AGO <= last_login <= TODAY:
+                chapter['active'] = True
+            elif last_login <= TODAY - ONE_YEAR_AGO:
+                chapter['active'] = False
 
             row_to_write = {}
             for header in headers:
