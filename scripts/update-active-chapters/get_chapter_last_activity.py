@@ -1,16 +1,20 @@
+__author__ = "Lorena Mesa"
+__email__ = "lorena@pyladies.com"
+
 import base64
+import csv
+import datetime
+import time
+from functools import wraps
 from os import getenv
 from os.path import join, dirname
 from pathlib import Path
+from urllib.parse import urlencode
 
 import requests
 import yaml
 from dotenv import load_dotenv
-
-__author__ = "Lorena Mesa"
-__email__ = "lorena@pyladies.com"
-
-
+from geopy import OpenCage
 import gspread
 from gspread import SpreadsheetNotFound, Cell
 from oauth2client.service_account import ServiceAccountCredentials
@@ -30,6 +34,153 @@ MEETUP_REDIRECT_URI = getenv('MEETUP_REDIRECT_URI')
 GITHUB_TOKEN = getenv('GITHUB_TOKEN')
 OPEN_CAGE_API_KEY = getenv('OPEN_CAGE_API_KEY')
 
+
+# Ratelimiting defaults
+MAX_MEETUP_REQUESTS_PER_HOUR = 200
+
+# Datetime for csv
+TODAY_DATE = datetime.datetime.now().strftime('%Y_%m_%d')
+
+def ratelimit(number_times):
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            nonlocal number_times
+
+            completed, response = fn(*args, **kwargs)
+            number_times = response.headers.get('X-RateLimit-Remaining')
+            if not completed and response.status_code == 429:
+                seconds_until_reset = int(
+                    response.headers.get('X-RateLimit-Reset')
+                )
+
+                meetup_errors = response.json().get('errors')
+                meetup_errors = [e.get('code') for e in meetup_errors]
+
+                if seconds_until_reset and 'throttled' in meetup_errors:
+                    print(f'Throttling {seconds_until_reset} ...')
+                    time.sleep(seconds_until_reset)
+                    print(f'Trying again ...')
+                    completed, response = fn(*args, **kwargs)
+                return completed, response
+
+            return completed, response
+
+        return wrapper
+    return decorator
+
+
+class MeetUpApi(object):
+    """
+    Lightweight wrapper to make requests against MeetUp API.
+    """
+
+    api_url = 'https://api.meetup.com'
+    api_auth_url = 'https://secure.meetup.com'
+
+    def __init__(self, client_id, client_secret, redirect_uri):
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.redirect_uri = redirect_uri
+        self.token = None
+
+    def get_bearer_token(self):
+        auth_endpoint = f'{MeetUpApi.api_auth_url}/oauth2/authorize' \
+                        f'?client_id={self.client_id}' \
+                        f'&redirect_uri={self.redirect_uri}' \
+                        f'&response_type=code'
+        code = input(f'Visit {auth_endpoint} and enter response code:')
+
+        data = {
+            'client_id': f'{self.client_id}',
+            'client_secret':  f'{self.client_secret}',
+            'redirect_uri': f'{self.redirect_uri}',
+            'code': f'{code}',
+            'grant_type': 'authorization_code'
+        }
+
+        try:
+            response = requests.post(
+                f'{MeetUpApi.api_auth_url}/oauth2/access',
+                data=data
+            )
+            if response.ok:
+                data = response.json()
+                self.token = data.get('access_token')
+                self.refresh_token = data.get('refresh_token')
+                print(response.status_code, self.token, self.refresh_token)
+                return True
+            return False
+        except Exception as e:
+            raise e
+
+    @ratelimit(number_times=MAX_MEETUP_REQUESTS_PER_HOUR)
+    def get_groups(self, topic_ids):
+        """
+        :param  meetup_ids: list of numeric topic_ids
+        :return list of pyladies meetup dicts
+        """
+
+        query_params = {
+            'category': topic_ids,
+        }
+
+        query_string = urlencode(query_params)
+
+        find_groups_endpoint = u'{}/{}?{}'.format(
+            MeetUpApi.api_url, 'find', 'groups', query_string
+        )
+
+        try:
+            response = requests.get(
+                find_groups_endpoint,
+                headers={'Authorization': f'Bearer {self.token}'}
+            )
+            if response.ok:
+                return True, response
+            return False, response
+        except Exception as e:
+            raise e
+
+    @ratelimit(number_times=MAX_MEETUP_REQUESTS_PER_HOUR)
+    def get_group(self, chapter_name):
+        """
+        :param  chapter_name: meetup chapter urlnames
+        e.g. meetup.com/Chicago-Pyladies/ the urlname is 'Chicago-Pyladies'
+        :return dict of pyladies meetup group info
+        """
+        group_endpoint = f'{MeetUpApi.api_url}/{chapter_name}'
+
+        try:
+            response = requests.get(
+                group_endpoint,
+                headers={'Authorization': f'Bearer {self.token}'}
+            )
+            if response.ok:
+                return True, response
+            return False, response
+        except Exception as e:
+            raise e
+
+    @ratelimit(number_times=MAX_MEETUP_REQUESTS_PER_HOUR)
+    def get_most_recent_event(self, chapter_name):
+        """
+        :param  chapter_name: meetup chapter urlnames
+        e.g. meetup.com/Chicago-Pyladies/ the urlname is 'Chicago-Pyladies'
+        :return dict with date and url of most recent event
+        """
+        group_endpoint = f'{MeetUpApi.api_url}/{chapter_name}/events'
+
+        try:
+            response = requests.get(
+                group_endpoint,
+                headers={'Authorization': f'Bearer {self.token}'}
+            )
+            if response.ok:
+                return True, response
+            return False, response
+        except Exception as e:
+            raise e
 
 class GoogleSheetsAPI(object):
     def __init__(self, scope, credentials_file):
@@ -56,6 +207,16 @@ class GoogleSheetsAPI(object):
         else:
             return None
 
+class OpenCageApi(object):
+    def __init__(self, api_key):
+        self.geolocator = OpenCage(api_key=api_key)
+
+    def get_location_information(self, lat, long):
+        location = self.geolocator.reverse(query=(lat, long))
+        return {
+            'country': location.raw.get('components').get('country'),
+            'continent': location.raw.get('components').get('continent')
+        }
 
 def download_pyladies_chapters(token):
     headers = {'Authorization': f'token {token}'}
@@ -176,7 +337,7 @@ if __name__ == "__main__":
             'email': record.get('email'),
             'website': record.get('website') if record.get('external_website')
             else f'https://pyladies.com/locations/{record.get("website")}',
-            'meetup': f'https://meetup.com/{record.get("meetup")}' if record.get('meetup') else '',
+            'meetup': record.get('meetup'),
             'twitter': f'https://twitter.com/{record.get("twitter")}' if record.get('twitter') else '',
             'latitude': record.get('lat') if record.get('location') else '',
             'longitude': record.get('lon') if record.get('location') else '',
@@ -197,7 +358,69 @@ if __name__ == "__main__":
         email_to_website[chapter.get('email')] = chapter
 
     print('Merging chapter information...')
-    for email, chapter in email_to_google:
-        new_chapter = {**chapter, **email_to_directory.get(email), **email_to_website.get(email)}
-        print(new_chapter)
+    merged_chapter_data = []
+    for email, chapter in email_to_google.items():
+        new_chapter = {**chapter, **email_to_directory.get(email, {}), **email_to_website.get(email, {})}
+        merged_chapter_data.append(new_chapter)
 
+    meetup_api = MeetUpApi(
+        client_id=MEETUP_CLIENT_ID,
+        client_secret=MEETUP_CLIENT_SECRET,
+        redirect_uri=MEETUP_REDIRECT_URI
+    )
+    token_obtained = meetup_api.get_bearer_token()
+    if not token_obtained:
+        print('Unable to obtain token, exiting ...')
+        exit(-1)
+
+    headers = ['email', 'last_sign_in', 'name', 'event_page', 'directory_website', 'language', 'organizers',
+               'city', 'country', 'website', 'meetup', 'twitter', 'latitude', 'longitude', 'image', 'continent',
+               'last_event_date', 'last_event_link']
+    with open(f'merged_chapter_data_{TODAY_DATE}.csv', 'w') as csvfile:
+
+        writer = csv.DictWriter(csvfile, fieldnames=headers)
+        writer.writeheader()
+
+        geolocator = OpenCageApi(OPEN_CAGE_API_KEY)
+        for chapter in merged_chapter_data:
+            meetup_name = chapter.get('meetup')
+            chapter['meetup'] = f'https://meetup.com/{meetup_name}' if meetup_name else ''
+            chapter['last_event_date'], chapter['last_event_link'] = '', ''
+            if meetup_name:
+                print(f'Retrieving chapter {meetup_name} info')
+                completed, meetup_resp = meetup_api.get_group(meetup_name)
+
+                if meetup_resp.status_code == 404:
+                    print(f'Chapter {meetup_name} has no meetup, deleting info')
+                    continue
+
+                meetup_resp = meetup_resp.json()
+                chapter['latitude'] = meetup_resp.get('lat')
+                chapter['longitude'] = meetup_resp.get('lon')
+
+                print(f'Retrieving last event data for: {meetup_name}')
+                completed, event_resp = meetup_api.get_most_recent_event(meetup_name)
+
+                if not completed:
+                    continue
+
+                event_resp = event_resp.json()
+                if len(event_resp) >= 1:
+                    event_resp = event_resp[0]
+                    chapter['last_event_date'] = event_resp.get('local_date')
+                    chapter['last_event_link'] = event_resp.get('link')
+
+            print(f'Retrieving country info for chapter: {chapter.get("name", "")}')
+
+            location_info = ''
+            if chapter.get('latitude') and chapter.get('longitude'):
+                location_info = geolocator.get_location_information(chapter.get('latitude'), chapter.get('longitude'))
+                chapter['country'] = location_info.get('country')
+                chapter['continent'] = location_info.get('continent')
+
+            row_to_write = {}
+            for header in headers:
+                row_to_write[header] = chapter.get(header)
+
+            print(f'Writing row {chapter.get("name")}')
+            writer.writerow(row_to_write)
