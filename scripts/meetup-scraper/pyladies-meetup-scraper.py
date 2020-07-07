@@ -312,6 +312,8 @@ if __name__ == "__main__":
             if latitude and longitude:
                 location_info = geolocator.get_location_information(latitude, longitude)
 
+            meetup_url_name = chapter.get('meetup')
+
             print(f'Retrieving last event data for: {chapter.get("name", "")}')
             completed, event_resp = meetup_api.get_most_recent_event(meetup_url_name)
 
@@ -320,20 +322,23 @@ if __name__ == "__main__":
                 print((f'Error {event_resp.status_code}, '
                        f'unable to get chapter {meetup_url_name} event data'))
             else:
-                event_resp = event_resp.json()[0]
-                last_event_date = event_resp.get('local_time')
-                last_event_link = event_resp.get('link')
+                event_resp = event_resp.json()
+                if len(event_resp) >= 1:
+                    event_resp = event_resp[0]
+                    last_event_date = event_resp.get('local_time')
+                    last_event_link = event_resp.get('link')
 
             chapter_info = {
                 'continent': location_info.get('continent') if location_info else '',
                 'country': location_info.get('country') if location_info else '',
                 'email': chapter.get('email', ''),
-                'image': f'https://pyladies.com/assets/images/{chapter.get("image", "")}',
+                'image': f'https://pyladies.com/assets/images/{chapter.get("image", "")}'
+                if chapter.get("image", "") else '',
                 'last event date': last_event_date,
                 'last event link': last_event_link,
                 'latitude': latitude,
                 'longitude': longitude,
-                'meetup': f'https://meetup.com/{chapter.get("meetup", "")}',
+                'meetup': f'https://meetup.com/{meetup_url_name}' if meetup_url_name else '',
                 'name': chapter.get('name', ''),
                 'organizer': chapter.get('organizer', ''),
                 'twitter': chapter.get('twitter', ''),
