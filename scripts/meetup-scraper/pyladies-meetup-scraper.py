@@ -19,6 +19,7 @@ following values in the `.env` file:
 You can run from the commandline with: pyladies-meetup-scraper.py
 """
 import base64
+import csv
 import time
 
 from dotenv import load_dotenv
@@ -242,7 +243,7 @@ if __name__ == "__main__":
         new_meetup_id = id(meetup_resp.get('id', 0))
         if meetup_id != new_meetup_id:
             print(f'MeetUp Chapter {chapter.get("name")} '
-                  f'id is wrong {meetup_resp.get("id")}')
+                  f'id is wrong {new_meetup_id}')
             chapter['meetup_id'] = new_meetup_id
 
         if meetup_resp.get('organizer'):
@@ -259,6 +260,26 @@ if __name__ == "__main__":
 
         if meetup_resp.get('pro_network'):
             chapter['pro_network'] = meetup_resp.get('pro_network').get('name')
+
+    with open('pyladies_meetup_locations.csv', 'w') as csvfile:
+        chapters = chapter_data.get('chapters')
+        writer = csv.DictWriter(csvfile, fieldnames=[
+            'email', 'image', 'latitude', 'longitude', 'meetup', 'name', 'organizer', 'twitter'
+        ])
+        writer.writeheader()
+
+        for chapter in chapters:
+            chapter_info =  {
+                'email': chapter.get('email', ''),
+                'image': chapter.get('image', ''),
+                'latitude': chapter.get('location').get('latitude') if chapter.get('location', '') else '',
+                'longitude': chapter.get('location').get('longitude') if chapter.get('location', '') else '',
+                'meetup': chapter.get('meetup', ''),
+                'name': chapter.get('name', ''),
+                'organizer': chapter.get('organizer', ''),
+                'twitter': chapter.get('twitter', ''),
+            }
+            writer.writerow(chapter_info)
 
     with open(chapter_file, 'w') as stream:     # Overwrites original file
         chapter_data = yaml.dump(chapter_data, stream)
