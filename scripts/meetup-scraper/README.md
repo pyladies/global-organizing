@@ -1,6 +1,11 @@
 # PyLadies MeetUp Scraper
 
-A Python 3.6+ script, this project both uses the MeetUp API and a GitHub token to create a `pyladies_meetup_chapters.yml`: 
+A Python 3.6+ script, this project both uses the MeetUp API and a GitHub token to create:
+
+- `pyladies_meetup_chapters.yml` used to update [PyLadies locations table](https://pyladies.com/locations)
+- `pyladies_meetup_locations.csv` used to update []PyLadies Map](https://www.google.com/maps/d/u/2/viewer?mid=1QINwclDD_RxTtFcaw-wF5vYhdvNFlG-Q&ll=17.186384774558626%2C14.989999999999966&z=2): 
+
+Information collected includes:
 
 - meetup name
 - meetup id
@@ -12,9 +17,10 @@ A Python 3.6+ script, this project both uses the MeetUp API and a GitHub token t
 
 1. Register [a meetup app](https://secure.meetup.com/meetup_api/oauth_consumers/) and insert the following values in the `.env` file: `MEETUP_CLIENT_ID`, `MEETUP_CLIENT_SECRET`, `MEETUP_REDIRECT_URI`.
 2. Add a GitHub token with read privileges into the `.env` file: `GITHUB_TOKEN`.
-3. Ensure you have installed the libraries from `requirements.txt` via `pip install -r requirements.txt`.
-4. [OPTIONAL] As obtaining a MeetUp access token requires your MeetUp application to use a `redirect_uri`, read the section below for how to setup your own `simple_server.py` for local development.
-5. The script is both a bash executable script: `pyladies-meetup-scraper.py` or with `python` using `python pyladies-meetup-scraper.py`.
+3. Register for an [OpenCage](https://opencagedata.com/api) and insert the key  into the  `.env` file: `OPEN_CAGE_API_KEY`.
+4. Ensure you have installed the libraries from `requirements.txt` via `pip install -r requirements.txt`.
+5. [OPTIONAL] As obtaining a MeetUp access token requires your MeetUp application to use a `redirect_uri`, read the section below for how to setup your own `simple_server.py` for local development.
+6. The script is both a bash executable script: `pyladies-meetup-scraper.py` or with `python` using `python pyladies-meetup-scraper.py`.
 
 ### Obtaining a MeetUp Access Token in Local Development
 

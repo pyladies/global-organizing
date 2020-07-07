@@ -14,7 +14,8 @@ following values in the `.env` file:
 - GITHUB_TOKEN
 - MEETUP_CLIENT_ID
 - MEETUP_CLIENT_SECRET
-- MEETUP_REDIRECT_URI
+- MEETUP_REDIRECT_URI\
+- OPEN_CAGE_API_KEY
 
 You can run from the commandline with: pyladies-meetup-scraper.py
 """
@@ -31,6 +32,8 @@ from urllib.parse import urlencode
 import requests
 import yaml
 
+from geopy.geocoders import OpenCage
+
 
 __author__ = "Lorena Mesa"
 __email__ = "lorena@pyladies.com"
@@ -46,6 +49,7 @@ MEETUP_CLIENT_ID = getenv('MEETUP_CLIENT_ID')
 MEETUP_CLIENT_SECRET = getenv('MEETUP_CLIENT_SECRET')
 MEETUP_REDIRECT_URI = getenv('MEETUP_REDIRECT_URI')
 GITHUB_TOKEN = getenv('GITHUB_TOKEN')
+OPEN_CAGE_API_KEY = getenv('OPEN_CAGE_API_KEY')
 
 # Ratelimiting defaults
 MAX_MEETUP_REQUESTS_PER_HOUR = 200
@@ -172,6 +176,16 @@ class MeetUpApi(object):
         except Exception as e:
             raise e
 
+class OpenCageApi(object):
+    def __init__(self, api_key):
+        self.geolocator = OpenCage(api_key=api_key)
+
+    def get_location_information(self, lat, long):
+        location = self.geolocator.reverse(query=(lat, long))
+        return {
+            'country': location.raw.get('components').get('country'),
+            'continent': location.raw.get('components').get('continent')
+        }
 
 def download_pyladies_chapters(token):
     headers = {'Authorization': f'token {token}'}
@@ -189,7 +203,6 @@ def download_pyladies_chapters(token):
         f.write(chapters)
 
     return chapters_file
-
 
 if __name__ == "__main__":
     if not GITHUB_TOKEN:
@@ -264,17 +277,28 @@ if __name__ == "__main__":
     with open('pyladies_meetup_locations.csv', 'w') as csvfile:
         chapters = chapter_data.get('chapters')
         writer = csv.DictWriter(csvfile, fieldnames=[
-            'email', 'image', 'latitude', 'longitude', 'meetup', 'name', 'organizer', 'twitter'
+            'continent', 'country', 'email', 'image', 'latitude', 'longitude', 'meetup', 'name', 'organizer', 'twitter'
         ])
         writer.writeheader()
 
+        geolocator = OpenCageApi(OPEN_CAGE_API_KEY)
         for chapter in chapters:
-            chapter_info =  {
+            latitude = chapter.get('location').get('latitude') if chapter.get('location', '') else ''
+            longitude = chapter.get('location').get('longitude') if chapter.get('location', '') else ''
+
+            country = ''
+            print(f'Retrieving country info for chapter: {chapter.get("name", "")}')
+            if latitude and longitude:
+                location_info = geolocator.get_location_information(latitude, longitude)
+
+            chapter_info = {
+                'continent': location_info.get('continent') if location_info else '',
+                'country': location_info.get('country') if location_info else '',
                 'email': chapter.get('email', ''),
-                'image': chapter.get('image', ''),
-                'latitude': chapter.get('location').get('latitude') if chapter.get('location', '') else '',
-                'longitude': chapter.get('location').get('longitude') if chapter.get('location', '') else '',
-                'meetup': chapter.get('meetup', ''),
+                'image': f'https://pyladies.com/assets/images/{chapter.get("image", "")}',
+                'latitude': latitude,
+                'longitude': longitude,
+                'meetup': f'https://meetup.com/{chapter.get("meetup", "")}',
                 'name': chapter.get('name', ''),
                 'organizer': chapter.get('organizer', ''),
                 'twitter': chapter.get('twitter', ''),
