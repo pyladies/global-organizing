@@ -176,6 +176,26 @@ class MeetUpApi(object):
         except Exception as e:
             raise e
 
+    @ratelimit(number_times=MAX_MEETUP_REQUESTS_PER_HOUR)
+    def get_most_recent_event(self, chapter_name):
+        """
+        :param  chapter_name: meetup chapter urlnames
+        e.g. meetup.com/Chicago-Pyladies/ the urlname is 'Chicago-Pyladies'
+        :return dict with date and url of most recent event
+        """
+        group_endpoint = f'{MeetUpApi.api_url}/{chapter_name}/events'
+
+        try:
+            response = requests.get(
+                group_endpoint,
+                headers={'Authorization': f'Bearer {self.token}'}
+            )
+            if response.ok:
+                return True, response
+            return False, response
+        except Exception as e:
+            raise e
+
 class OpenCageApi(object):
     def __init__(self, api_key):
         self.geolocator = OpenCage(api_key=api_key)
@@ -277,7 +297,8 @@ if __name__ == "__main__":
     with open('pyladies_meetup_locations.csv', 'w') as csvfile:
         chapters = chapter_data.get('chapters')
         writer = csv.DictWriter(csvfile, fieldnames=[
-            'continent', 'country', 'email', 'image', 'latitude', 'longitude', 'meetup', 'name', 'organizer', 'twitter'
+            'continent', 'country', 'email', 'image', 'last event date', 'last event link',
+            'latitude', 'longitude', 'meetup', 'name', 'organizer', 'twitter'
         ])
         writer.writeheader()
 
@@ -291,11 +312,25 @@ if __name__ == "__main__":
             if latitude and longitude:
                 location_info = geolocator.get_location_information(latitude, longitude)
 
+            print(f'Retrieving last event data for: {chapter.get("name", "")}')
+            completed, event_resp = meetup_api.get_most_recent_event(meetup_url_name)
+
+            last_event_date, last_event_link = '', ''
+            if not completed:
+                print((f'Error {event_resp.status_code}, '
+                       f'unable to get chapter {meetup_url_name} event data'))
+            else:
+                event_resp = event_resp.json()[0]
+                last_event_date = event_resp.get('local_time')
+                last_event_link = event_resp.get('link')
+
             chapter_info = {
                 'continent': location_info.get('continent') if location_info else '',
                 'country': location_info.get('country') if location_info else '',
                 'email': chapter.get('email', ''),
                 'image': f'https://pyladies.com/assets/images/{chapter.get("image", "")}',
+                'last event date': last_event_date,
+                'last event link': last_event_link,
                 'latitude': latitude,
                 'longitude': longitude,
                 'meetup': f'https://meetup.com/{chapter.get("meetup", "")}',
