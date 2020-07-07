@@ -21,6 +21,7 @@ You can run from the commandline with: pyladies-meetup-scraper.py
 """
 import base64
 import csv
+import datetime
 import time
 
 from dotenv import load_dotenv
@@ -54,6 +55,8 @@ OPEN_CAGE_API_KEY = getenv('OPEN_CAGE_API_KEY')
 # Ratelimiting defaults
 MAX_MEETUP_REQUESTS_PER_HOUR = 200
 
+# Datetime for csv
+TODAY_DATE = datetime.datetime.now().strftime('%Y_%m_%d')
 
 def ratelimit(number_times):
     def decorator(fn):
@@ -294,7 +297,7 @@ if __name__ == "__main__":
         if meetup_resp.get('pro_network'):
             chapter['pro_network'] = meetup_resp.get('pro_network').get('name')
 
-    with open('pyladies_meetup_locations.csv', 'w') as csvfile:
+    with open(f'pyladies_meetup_locations_{TODAY_DATE}.csv', 'w') as csvfile:
         chapters = chapter_data.get('chapters')
         writer = csv.DictWriter(csvfile, fieldnames=[
             'continent', 'country', 'email', 'image', 'last event date', 'last event link',
@@ -325,7 +328,7 @@ if __name__ == "__main__":
                 event_resp = event_resp.json()
                 if len(event_resp) >= 1:
                     event_resp = event_resp[0]
-                    last_event_date = event_resp.get('local_time')
+                    last_event_date = event_resp.get('local_date')
                     last_event_link = event_resp.get('link')
 
             chapter_info = {
