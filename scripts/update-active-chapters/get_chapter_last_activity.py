@@ -43,7 +43,9 @@ MAX_MEETUP_REQUESTS_PER_HOUR = 200
 # Datetime for csv
 TODAY_DATE = datetime.datetime.now().strftime('%Y_%m_%d')
 TODAY = datetime.datetime.now()
-ONE_YEAR_AGO = datetime.timedelta(days=365)
+ONE_YEAR_AGO = TODAY - datetime.timedelta(days=365)
+ONE_YEAR_AGO_DATESTR = ONE_YEAR_AGO.strftime('%Y-%m-%d')
+TWO_MONTHS_FROM_NOW_DATESTR = (TODAY + datetime.timedelta(days=60)).strftime('%Y-%m-%d')
 
 def ratelimit(number_times):
     def decorator(fn):
@@ -167,17 +169,33 @@ class MeetUpApi(object):
             raise e
 
     @ratelimit(number_times=MAX_MEETUP_REQUESTS_PER_HOUR)
-    def get_most_recent_event(self, chapter_name):
+    def get_most_recent_event(self, chapter_name, start_date=None, end_date=None):
         """
         :param  chapter_name: meetup chapter urlnames
         e.g. meetup.com/Chicago-Pyladies/ the urlname is 'Chicago-Pyladies'
+        :param  start_date: str represented YYYY-MM-DD
+        :param  end_date: str represented YYYY-MM-DD
         :return dict with date and url of most recent event
         """
-        group_endpoint = f'{MeetUpApi.api_url}/{chapter_name}/events'
+        events_endpoint = f'{MeetUpApi.api_url}/{chapter_name}/events'
+
+        query_params = {
+            'page': 1,
+            'desc': 1,
+            'status': 'upcoming,past'
+        }
+        if start_date:
+            query_params['no_earlier_than'] = start_date
+        if end_date:
+            query_params['no_later_than'] = end_date
+
+        query_string = urlencode(query_params)
+
+        events_endpoint = f'{events_endpoint}/?{query_string}'
 
         try:
             response = requests.get(
-                group_endpoint,
+                events_endpoint,
                 headers={'Authorization': f'Bearer {self.token}'}
             )
             if response.ok:
@@ -381,18 +399,32 @@ if __name__ == "__main__":
     headers = ['email', 'last_sign_in', 'name', 'event_page', 'directory_website', 'language', 'organizers',
                'city', 'country', 'website', 'meetup', 'twitter', 'latitude', 'longitude', 'image', 'continent',
                'last_event_date', 'last_event_link', 'registered_in_directory','active']
-    with open(f'merged_chapter_data_{TODAY_DATE}.csv', 'w') as csvfile:
+    with open(f'merged_chapter_data_{TODAY_DATE}_1640.csv', 'w') as csvfile:
 
         writer = csv.DictWriter(csvfile, fieldnames=headers)
         writer.writeheader()
 
         geolocator = OpenCageApi(OPEN_CAGE_API_KEY)
+        counter = 0
         for chapter in merged_chapter_data:
             meetup_name = chapter.get('meetup')
+            if not meetup_name:
+                if chapter.get('event_page'):
+                    event_pages = chapter.get('event_page')
+                    meetup_name = list(filter(lambda p: 'meetup' in p, event_pages))
+                    if len(meetup_name) >= 1:
+                        parsed_name = meetup_name[0]
+                        parsed_name = parsed_name.rstrip('/')   # Remove trailing slash if full url includes trailing
+                        parsed_name = parsed_name.split('/')[-1]
+                        if parsed_name:
+                            meetup_name = parsed_name
+
             chapter['meetup'] = f'https://meetup.com/{meetup_name}' if meetup_name else ''
+            if chapter['meetup']:
+                counter += 1
+                print(counter, chapter['meetup'])
             chapter['last_event_date'], chapter['last_event_link'] = '', ''
             if meetup_name:
-                print(f'Retrieving chapter {meetup_name} info')
                 _, meetup_resp = meetup_api.get_group(meetup_name)
 
                 if meetup_resp.status_code == 404:
@@ -404,16 +436,17 @@ if __name__ == "__main__":
                 chapter['longitude'] = meetup_resp.get('lon')
 
                 print(f'Retrieving last event data for: {meetup_name}')
-                completed, event_resp = meetup_api.get_most_recent_event(meetup_name)
+                start_date=ONE_YEAR_AGO
+                completed, event_resp = meetup_api.get_most_recent_event(
+                    meetup_name, start_date=ONE_YEAR_AGO_DATESTR, end_date=TWO_MONTHS_FROM_NOW_DATESTR
+                )
 
-                if not completed:
-                    continue
-
-                event_resp = event_resp.json()
-                if len(event_resp) >= 1:
-                    event_resp = event_resp[0]
-                    chapter['last_event_date'] = event_resp.get('local_date')
-                    chapter['last_event_link'] = event_resp.get('link')
+                if completed:
+                    event_resp = event_resp.json()
+                    if len(event_resp) >= 1:
+                        event_resp = event_resp[0]
+                        chapter['last_event_date'] = event_resp.get('local_date')
+                        chapter['last_event_link'] = event_resp.get('link')
 
             print(f'Retrieving country info for chapter: {chapter.get("name", "")}')
 
@@ -423,25 +456,30 @@ if __name__ == "__main__":
                 chapter['country'] = location_info.get('country')
                 chapter['continent'] = location_info.get('continent')
 
-            last_sign_in = chapter.get('last_sign_in')
+            last_sign_in = chapter.get('last_sign_in').lower()
             last_login = None
             if last_sign_in != 'never logged in':
                 try:
-                    last_login = datetime.datetime.strptime(last_sign_in, '%Y/%m/%d %H:%M:%S')
+                    last_login = datetime.datetime.strptime(last_sign_in, '%Y-%m-%d %H:%M:%S')
                 except Exception as e:
-                    print('Could not parse datetime str')
+                    last_login = datetime.datetime.strptime(last_sign_in, '%Y/%m/%d %H:%M:%S')
 
-            # Determine if active using email activity 
-            if (chapter.get('last_sign_in').lower() == 'never logged in' and chapter.get('registered_in_directory', 'no') == 'no'):
-                chapter['active'] = False
-            elif TODAY - ONE_YEAR_AGO <= last_login <= TODAY:
+            # Determine if active using email activity
+            if chapter.get('last_event_date'):
                 chapter['active'] = True
-            elif last_login <= TODAY - ONE_YEAR_AGO:
+            elif (chapter.get('last_sign_in').lower() == 'never logged in' and chapter.get('registered_in_directory', 'no') == 'no'):
+                chapter['active'] = False
+            elif ONE_YEAR_AGO <= last_login <= TODAY:
+                chapter['active'] = True
+            elif last_login <= ONE_YEAR_AGO:
                 chapter['active'] = False
 
             row_to_write = {}
             for header in headers:
                 row_to_write[header] = chapter.get(header)
 
+            # if row_to_write.get('meetup'):
+            #     counter += 1
+            #     print(counter)
             print(f'Writing row {chapter.get("name")}')
             writer.writerow(row_to_write)
