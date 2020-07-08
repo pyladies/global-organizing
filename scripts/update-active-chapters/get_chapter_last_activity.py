@@ -415,7 +415,7 @@ if __name__ == "__main__":
     headers = ['email', 'last_sign_in', 'name', 'event_page', 'directory_website', 'language', 'organizers',
                'city', 'country', 'website', 'meetup', 'twitter', 'last_tweet_date', 'last_tweet_link',
                'latitude', 'longitude', 'image', 'continent', 'last_event_date', 'last_event_link',
-               'registered_in_directory', 'active']
+               'registered_in_directory', 'active', 'active_reason']
     with open(f'merged_chapter_data_{TODAY_DATE}.csv', 'w') as csvfile:
 
         writer = csv.DictWriter(csvfile, fieldnames=headers)
@@ -511,18 +511,23 @@ if __name__ == "__main__":
             # Determine if active using email activity
             if chapter.get('last_event_date'):
                 chapter['active'] = True
+                chapter['active_reason'] = 'Active on MeetUp within last year'
             elif chapter.get('last_tweet_date') and \
                     ONE_YEAR_AGO <= datetime.datetime.strptime(chapter.get('last_tweet_date'), '%Y-%m-%d') <= TODAY:
                 chapter['active'] = True
+                chapter['active_reason'] = 'Active on Twitter within last year'
             elif last_login and  ONE_YEAR_AGO <= last_login <= TODAY:
                 chapter['active'] = True
+                chapter['active_reason'] = 'Active on email within last year'
             elif (
                     chapter.get('last_sign_in').lower() == 'never logged in' and
                     chapter.get('registered_in_directory', 'no') == 'no'
             ):
                 chapter['active'] = False
+                chapter['active_reason'] = 'Not active on email within last year and not registered in directory'
             elif last_login <= ONE_YEAR_AGO:
                 chapter['active'] = False
+                chapter['active_reason'] = 'Not active on email for more than a year'
 
             row_to_write = {}
             for header in headers:
