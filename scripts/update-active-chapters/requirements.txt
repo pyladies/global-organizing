@@ -1,0 +1,7 @@
+flask
+geopy
+gspread
+oauth2client
+python-dotenv
+pyyaml
+tweepy

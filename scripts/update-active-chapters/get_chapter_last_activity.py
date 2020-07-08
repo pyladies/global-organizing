@@ -1,4 +1,6 @@
+import tweepy as tweepy
 from dateutil.relativedelta import relativedelta
+from tweepy import TweepError
 
 __author__ = "Lorena Mesa"
 __email__ = "lorena@pyladies.com"
@@ -11,15 +13,16 @@ from functools import wraps
 from os import getenv
 from os.path import join, dirname
 from pathlib import Path
+import requests
 from urllib.parse import urlencode
 
-import requests
-import yaml
 from dotenv import load_dotenv
 from geopy import OpenCage
 import gspread
 from gspread import SpreadsheetNotFound
 from oauth2client.service_account import ServiceAccountCredentials
+import tweepy
+import yaml
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -35,7 +38,10 @@ MEETUP_CLIENT_SECRET = getenv('MEETUP_CLIENT_SECRET')
 MEETUP_REDIRECT_URI = getenv('MEETUP_REDIRECT_URI')
 GITHUB_TOKEN = getenv('GITHUB_TOKEN')
 OPEN_CAGE_API_KEY = getenv('OPEN_CAGE_API_KEY')
-
+TWITTER_CONSUMER_KEY = getenv('TWITTER_CONSUMER_KEY')
+TWITTER_CONSUMER_SECRET = getenv('TWITTER_CONSUMER_SECRET')
+TWITTER_ACCESS_TOKEN = getenv('TWITTER_ACCESS_TOKEN')
+TWITTER_ACCESS_SECRET = getenv('TWITTER_ACCESS_SECRET')
 
 # Ratelimiting defaults
 MAX_MEETUP_REQUESTS_PER_HOUR = 200
@@ -367,7 +373,7 @@ if __name__ == "__main__":
             'website': record.get('website') if record.get('external_website')
             else f'https://pyladies.com/locations/{record.get("website")}',
             'meetup': record.get('meetup'),
-            'twitter': f'https://twitter.com/{record.get("twitter")}' if record.get('twitter') else '',
+            'twitter': record.get('twitter'),
             'latitude': record.get('lat') if record.get('location') else '',
             'longitude': record.get('lon') if record.get('location') else '',
             'image': f'https://pyladies.com/assets/images/{record.get("image")}'
@@ -402,9 +408,14 @@ if __name__ == "__main__":
         print('Unable to obtain token, exiting ...')
         exit(-1)
 
+    tweepy_auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
+    tweepy_auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_SECRET)
+    twitter_api = tweepy.API(tweepy_auth)
+
     headers = ['email', 'last_sign_in', 'name', 'event_page', 'directory_website', 'language', 'organizers',
-               'city', 'country', 'website', 'meetup', 'twitter', 'latitude', 'longitude', 'image', 'continent',
-               'last_event_date', 'last_event_link', 'registered_in_directory','active']
+               'city', 'country', 'website', 'meetup', 'twitter', 'last_tweet_date', 'last_tweet_link',
+               'latitude', 'longitude', 'image', 'continent', 'last_event_date', 'last_event_link',
+               'registered_in_directory', 'active']
     with open(f'merged_chapter_data_{TODAY_DATE}.csv', 'w') as csvfile:
 
         writer = csv.DictWriter(csvfile, fieldnames=headers)
@@ -413,6 +424,22 @@ if __name__ == "__main__":
         geolocator = OpenCageApi(OPEN_CAGE_API_KEY)
         counter = 0
         for chapter in merged_chapter_data:
+            if chapter.get('twitter'):
+                twitter_name = chapter.get('twitter').strip('@')
+                latest_status = None
+                try:
+                    latest_status = twitter_api.user_timeline(screen_name=twitter_name, count=1, include_rts=False)
+                except TweepError as e:
+                    print(f'Unable to get twitter name {twitter_name} status. Removing.')
+                    chapter['twitter'] = None
+                    continue
+
+                if latest_status:
+                    latest_status = latest_status[0]
+                    chapter['last_tweet_date'] = latest_status.created_at.strftime('%Y-%m-%d')
+                    chapter['last_tweet_link'] = f'https://twitter.com/{twitter_name}/statuses/{latest_status.id_str}'
+                    chapter['twitter'] = f'https://twitter.com/{twitter_name}'
+
             meetup_name = chapter.get('meetup')
             if not meetup_name:
                 if chapter.get('event_page'):
@@ -484,10 +511,16 @@ if __name__ == "__main__":
             # Determine if active using email activity
             if chapter.get('last_event_date'):
                 chapter['active'] = True
-            elif (chapter.get('last_sign_in').lower() == 'never logged in' and chapter.get('registered_in_directory', 'no') == 'no'):
-                chapter['active'] = False
-            elif ONE_YEAR_AGO <= last_login <= TODAY:
+            elif chapter.get('last_tweet_date') and \
+                    ONE_YEAR_AGO <= datetime.datetime.strptime(chapter.get('last_tweet_date'), '%Y-%m-%d') <= TODAY:
                 chapter['active'] = True
+            elif last_login and  ONE_YEAR_AGO <= last_login <= TODAY:
+                chapter['active'] = True
+            elif (
+                    chapter.get('last_sign_in').lower() == 'never logged in' and
+                    chapter.get('registered_in_directory', 'no') == 'no'
+            ):
+                chapter['active'] = False
             elif last_login <= ONE_YEAR_AGO:
                 chapter['active'] = False
 
