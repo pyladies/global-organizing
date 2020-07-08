@@ -233,11 +233,17 @@ class OpenCageApi(object):
     def __init__(self, api_key):
         self.geolocator = OpenCage(api_key=api_key)
 
-    def get_location_information(self, lat, long):
-        location = self.geolocator.reverse(query=(lat, long))
+    def get_location_information(self, lat=None, long=None, city=None, country=None):
+        location = None
+        if lat and long:
+            location = self.geolocator.reverse(query=(lat, long))
+        elif city or country:
+            location = self.geolocator.geocode(query=f'{city} {country}')
         return {
             'country': location.raw.get('components').get('country'),
-            'continent': location.raw.get('components').get('continent')
+            'continent': location.raw.get('components').get('continent'),
+            'latitude': location.latitude,
+            'longitude': location.longitude,
         }
 
 def download_pyladies_chapters(token):
@@ -399,7 +405,7 @@ if __name__ == "__main__":
     headers = ['email', 'last_sign_in', 'name', 'event_page', 'directory_website', 'language', 'organizers',
                'city', 'country', 'website', 'meetup', 'twitter', 'latitude', 'longitude', 'image', 'continent',
                'last_event_date', 'last_event_link', 'registered_in_directory','active']
-    with open(f'merged_chapter_data_{TODAY_DATE}_1640.csv', 'w') as csvfile:
+    with open(f'merged_chapter_data_{TODAY_DATE}.csv', 'w') as csvfile:
 
         writer = csv.DictWriter(csvfile, fieldnames=headers)
         writer.writeheader()
@@ -429,6 +435,7 @@ if __name__ == "__main__":
 
                 if meetup_resp.status_code == 404:
                     print(f'Chapter {meetup_name} has no meetup, deleting info')
+                    chapter['meetup'] = None
                     continue
 
                 meetup_resp = meetup_resp.json()
@@ -450,9 +457,19 @@ if __name__ == "__main__":
 
             print(f'Retrieving country info for chapter: {chapter.get("name", "")}')
 
-            location_info = ''
+            location_info = None
             if chapter.get('latitude') and chapter.get('longitude'):
-                location_info = geolocator.get_location_information(chapter.get('latitude'), chapter.get('longitude'))
+                location_info = geolocator.get_location_information(
+                    lat=chapter.get('latitude'), long=chapter.get('longitude')
+                )
+            elif chapter.get('city') or chapter.get('country'):
+                location_info = geolocator.get_location_information(
+                    country=chapter.get('country'), city=chapter.get('city')
+                )
+
+            if location_info:
+                chapter['latitude'] = location_info.get('latitude')
+                chapter['longitude'] = location_info.get('longitude')
                 chapter['country'] = location_info.get('country')
                 chapter['continent'] = location_info.get('continent')
 
@@ -478,8 +495,5 @@ if __name__ == "__main__":
             for header in headers:
                 row_to_write[header] = chapter.get(header)
 
-            # if row_to_write.get('meetup'):
-            #     counter += 1
-            #     print(counter)
             print(f'Writing row {chapter.get("name")}')
             writer.writerow(row_to_write)
