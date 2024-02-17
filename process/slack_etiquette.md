@@ -39,6 +39,10 @@ Questions in #general tend to get answered quickly, or they get pushed off the s
 Conversely, if a channel is particularly quiet, please do not post "this channel is quiet".  Instead, try posting a question/article/or discussion point that others in the channel might comment on or enjoy.
 
 
+### :star2: Messages in Slack cannot be deleted
+
+We allow users to edit their messages for a short period of time after posting, ie to fix typos. But we keep messages as *proof*, for when people post inappropriate content.
+
 
 ### :star2: Don’t “ask to ask”
 Newcomers very commonly ask about asking a question in one of a few ways:
