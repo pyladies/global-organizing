@@ -41,7 +41,7 @@ Conversely, if a channel is particularly quiet, please do not post "this channel
 
 ### :star2: Messages in Slack cannot be deleted
 
-We allow users to edit their messages for a short period of time after posting, ie to fix typos. But we keep messages as *proof*, for when people post inappropriate content.
+We allow users to edit their messages for a short period of time after posting, i.e. to fix typos. We store messages as *historical records*; so please refrain from posting inappropriate content.
 
 
 ### :star2: Don’t “ask to ask”
