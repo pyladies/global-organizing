@@ -6,7 +6,12 @@ Repository to track global organizing as well as to suggest new project teams.
 
 The Global team meets every second Wednesday of the month. To make the meeting time more globally inclusive the meeting changes between two times. For every even months (Febuary, April, etc) the meeting is at 18:00 CT. Every odd month (January, March, etc.) the meeting is at 12:00 PM CT.
 
-To attend, in the [PyLadies Slack](https://slackin.pyladies.com/) please `@admin` with your request to join and a PyLadies Slack admin can help.
+
+### Who attends the global council meetings
+
+We follow a similar process for the global council meetings as in the PSF board, where council members are the only participants, this decision was made due to the nature of the meetings - discussing budgets, PSF-pyladies fiscal sponsoree relationship, proposals/initiatives approvals and discussions, etc.
+
+Occasionally if there is a proposal we need more insight on to reach a decision we will invite folks to a portion of the meeting so we can further discuss the proposal. However, all our minutes are public and available in this repository as issues.
 
 _Monthly Agenda_
 
