@@ -4,7 +4,7 @@ Repository to track global organizing as well as to suggest new project teams.
 
 ## Monthly Meeting
 
-The Global team meets every second Wednesday of the month. To make the meeting time more globally inclusive the meeting changes between two times. For every even months (Febuary, April, etc) the meeting is at 18:00 CT. Every odd month (January, March, etc.) the meeting is at 12:00 PM CT.
+The Global team meets every second Tuesday of the month. For details about meetings including agenda and notes, see [issues](https://github.com/pyladies/global-organizing/issues).
 
 
 ### Who attends the global council meetings
